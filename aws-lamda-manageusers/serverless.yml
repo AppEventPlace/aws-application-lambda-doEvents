@@ -1,0 +1,56 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: studentassasa
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: aws-lambda-createuser
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Cliente
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  createUser:
+    handler: src/addUser.addUser
+    events:
+      - httpApi:
+          path: /createUser
+          method: post
+  getUser:
+    handler: src/getUser.getUser
+    events:
+      - httpApi:
+          path: /getUser/{id}
+          method: get
+resources:
+  Resources:
+    TaskTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Cliente
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: celular
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: CelularIndex
+            KeySchema:
+              - AttributeName: celular
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL

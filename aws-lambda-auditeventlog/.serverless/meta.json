@@ -1,0 +1,466 @@
+{
+  "C:\\Users\\zeusa\\OneDrive\\Documentos\\EventPlaceAPP\\Serverless\\aws-lambda-auditeventlog": {
+    "versionSfCore": null,
+    "versionFramework": "4.3.3",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>"
+    },
+    "composeServiceName": null,
+    "servicePath": "C:\\Users\\zeusa\\OneDrive\\Documentos\\EventPlaceAPP\\Serverless\\aws-lambda-auditeventlog",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "org": "studentassasa",
+      "service": "aws-lambda-auditeventlog",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "dynamodb:*"
+            ],
+            "Resource": "arn:aws:dynamodb:us-east-1:519010577666:table/LogEvents"
+          }
+        ],
+        "stage": "dev",
+        "region": "us-east-1",
+        "versionFunctions": true,
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "RegisterLogLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/aws-lambda-auditeventlog-dev-registerLog"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "aws-lambda-auditeventlog",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-lambda-auditeventlog-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/aws-lambda-auditeventlog-dev*:*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "dynamodb:*"
+                          ],
+                          "Resource": "arn:aws:dynamodb:us-east-1:519010577666:table/LogEvents"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "aws-lambda-auditeventlog",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "RegisterLogLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-5447fd61-9173",
+                  "S3Key": "serverless/aws-lambda-auditeventlog/dev/1726658126772-2024-09-18T11:15:26.772Z/aws-lambda-auditeventlog.zip"
+                },
+                "Handler": "src/registerLog.handler",
+                "Runtime": "nodejs20.x",
+                "FunctionName": "aws-lambda-auditeventlog-dev-registerLog",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "RegisterLogLogGroup"
+              ]
+            },
+            "RegisterLogLambdaVersionIBOTVo3KJJNCs8S8us9T1mKdgYhO9EtSWA3MNCqsDBM": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "RegisterLogLambdaFunction"
+                },
+                "CodeSha256": "Gix/63iUaiFltd/vpz2KQXqMYJQysqydNeWif5Ut+O0="
+              }
+            },
+            "HttpApi": {
+              "Type": "AWS::ApiGatewayV2::Api",
+              "Properties": {
+                "Name": "dev-aws-lambda-auditeventlog",
+                "ProtocolType": "HTTP"
+              }
+            },
+            "HttpApiStage": {
+              "Type": "AWS::ApiGatewayV2::Stage",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "StageName": "$default",
+                "AutoDeploy": true,
+                "DefaultRouteSettings": {
+                  "DetailedMetricsEnabled": false
+                }
+              }
+            },
+            "RegisterLogLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "RegisterLogLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationRegisterLog": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "RegisterLogLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRoutePostRegisterlog": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "POST /registerLog",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationRegisterLog"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationRegisterLog"
+            },
+            "LogsTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "LogEvents",
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "rquid",
+                    "AttributeType": "S"
+                  },
+                  {
+                    "AttributeName": "timestamp",
+                    "AttributeType": "N"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "rquid",
+                    "KeyType": "HASH"
+                  },
+                  {
+                    "AttributeName": "timestamp",
+                    "KeyType": "RANGE"
+                  }
+                ],
+                "TimeToLiveSpecification": {
+                  "AttributeName": "ttl",
+                  "Enabled": true
+                }
+              }
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-us-east-1-5447fd61-9173",
+              "Export": {
+                "Name": "sls-aws-lambda-auditeventlog-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "RegisterLogLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "RegisterLogLambdaVersionIBOTVo3KJJNCs8S8us9T1mKdgYhO9EtSWA3MNCqsDBM"
+              },
+              "Export": {
+                "Name": "sls-aws-lambda-auditeventlog-dev-RegisterLogLambdaFunctionQualifiedArn"
+              }
+            },
+            "HttpApiId": {
+              "Description": "Id of the HTTP API",
+              "Value": {
+                "Ref": "HttpApi"
+              },
+              "Export": {
+                "Name": "sls-aws-lambda-auditeventlog-dev-HttpApiId"
+              }
+            },
+            "HttpApiUrl": {
+              "Description": "URL of the HTTP API",
+              "Value": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "https://",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    ".execute-api.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Export": {
+                "Name": "sls-aws-lambda-auditeventlog-dev-HttpApiUrl"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "functions": {
+        "registerLog": {
+          "handler": "src/registerLog.handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/registerLog",
+                "method": "post"
+              },
+              "resolvedMethod": "POST",
+              "resolvedPath": "/registerLog"
+            }
+          ],
+          "name": "aws-lambda-auditeventlog-dev-registerLog",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs20.x",
+          "vpc": {},
+          "versionLogicalId": "RegisterLogLambdaVersionIBOTVo3KJJNCs8S8us9T1mKdgYhO9EtSWA3MNCqsDBM"
+        }
+      },
+      "resources": {
+        "Resources": {
+          "LogsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "LogEvents",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "rquid",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "timestamp",
+                  "AttributeType": "N"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "rquid",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "timestamp",
+                  "KeyType": "RANGE"
+                }
+              ],
+              "TimeToLiveSpecification": {
+                "AttributeName": "ttl",
+                "Enabled": true
+              }
+            }
+          }
+        },
+        "Outputs": {}
+      }
+    },
+    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\norg: studentassasa\n# \"service\" is the name of this project. This will also be added to your AWS resource names.\nservice: aws-lambda-auditeventlog\n\nprovider:\n  name: aws\n  runtime: nodejs20.x\n  iamRoleStatements:\n    - Effect: Allow\n      Action:\n        - dynamodb:*\n      Resource:\n        - arn:aws:dynamodb:us-east-1:519010577666:table/LogEvents\n\nfunctions:\n  registerLog:\n    handler: src/registerLog.handler\n    events:\n      - httpApi:  \n          path: /registerLog\n          method: post\nresources:\n  Resources:\n    LogsTable:\n      Type: AWS::DynamoDB::Table\n      Properties:\n        TableName: LogEvents\n        BillingMode: PAY_PER_REQUEST\n        AttributeDefinitions:\n          - AttributeName: rquid\n            AttributeType: S  # 'S' es para string\n          - AttributeName: timestamp\n            AttributeType: N  # 'N' es para number\n        KeySchema:\n          - AttributeName: rquid\n            KeyType: HASH  # Partition key\n          - AttributeName: timestamp\n            KeyType: RANGE # Sort key\n        TimeToLiveSpecification:\n          AttributeName: ttl  # Configuración opcional para TTL en los logs\n          Enabled: true\n",
+    "command": [
+      "deploy"
+    ],
+    "options": {
+      "verbose": true
+    },
+    "error": null,
+    "params": {},
+    "machineId": "05fa8411e078b178b8bbbe19ad388d9f",
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "ce84c3d5-14e4-4997-ac54-cc2bb931a4b5",
+    "orgName": "studentassasa",
+    "userId": "RWSPLw43jPHJRjmdy2",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "studentassasa",
+    "subscription": null,
+    "userEmail": "appeventplace@gmail.com",
+    "serviceProviderAwsRegion": "us-east-1",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "519010577666",
+    "projectType": "traditional",
+    "versionSf": "4.3.3",
+    "serviceProviderAwsCfStackName": "aws-lambda-auditeventlog-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:us-east-1:519010577666:stack/aws-lambda-auditeventlog-dev/28d505e0-751f-11ef-9436-0e9f5cd7abfb",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:519010577666:stack/aws-lambda-auditeventlog-dev/28d505e0-751f-11ef-9436-0e9f5cd7abfb",
+    "serviceProviderAwsCfStackCreated": "2024-09-17T18:03:36.238Z",
+    "serviceProviderAwsCfStackUpdated": "2024-09-18T11:16:05.095Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "RegisterLogLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:519010577666:function:aws-lambda-auditeventlog-dev-registerLog:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-aws-lambda-auditeventlog-dev-RegisterLogLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "HttpApiId",
+        "OutputValue": "n5jdvkl9e7",
+        "Description": "Id of the HTTP API",
+        "ExportName": "sls-aws-lambda-auditeventlog-dev-HttpApiId"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-us-east-1-5447fd61-9173",
+        "ExportName": "sls-aws-lambda-auditeventlog-dev-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "HttpApiUrl",
+        "OutputValue": "https://n5jdvkl9e7.execute-api.us-east-1.amazonaws.com",
+        "Description": "URL of the HTTP API",
+        "ExportName": "sls-aws-lambda-auditeventlog-dev-HttpApiUrl"
+      }
+    ]
+  }
+}
