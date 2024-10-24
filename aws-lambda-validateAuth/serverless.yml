@@ -1,0 +1,30 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: studentassasa
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: aws-lambda-validateAuth
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    CLIENT_SECRET: 6g01mjgfuovevboobjb5bgllc774jmh7r5mvbdcqqdvi3g8r6sa
+    USER_POOL_ID: us-east-1_WDpSw6deY
+    CLIENT_ID: 58nnh6a3h9d5v0ng66bar2t00v
+
+functions:
+  generateToken:
+    handler: src/getToken.generateToken
+    events:
+      - http:
+          path: /generateToken
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    AuthLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: /aws/lambda/auth-service
+        RetentionInDays: 14
