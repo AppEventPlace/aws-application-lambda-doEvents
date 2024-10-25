@@ -1,0 +1,48 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: events
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: aws-lambda-manageevents
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Eventos
+functions:
+  createEvent:
+    handler: src/createEvent.createEvent
+    events:
+      - httpApi:
+          path: /createEvent
+          method: post
+  getEvents:
+    handler: src/getEvents.getEventById
+    events:
+      - httpApi:
+          path: /getEvents/{id}
+          method: get
+  updateEvent:
+    handler: src/updateEvent.updateEvent
+    events:
+      - httpApi:
+          path: /updateEvent/{id}
+          method: put
+resources:
+  Resources:
+    TaskTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Eventos
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
