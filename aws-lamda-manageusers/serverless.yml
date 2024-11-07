@@ -11,33 +11,37 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:*
+        - s3:PutObject
+        - lambda:InvokeFunction # Permiso para invocar otra Lambda
       Resource:
         - arn:aws:dynamodb:us-east-1:519010577666:table/Client
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client/index/EmailIndex
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client/index/PhoneIndex # Añadir el PhoneIndex
+        - arn:aws:s3:::doeventprofileimagesbucket
+        - arn:aws:lambda:us-east-1:519010577666:function:aws-lambda-auditeventlog-dev-registerLog # ARN de la Lambda registerLog
+
 functions:
-  hello:
-    handler: src/updateUser.updateUser
-    events:
-      - httpApi:
-          path: /updateUser
-          method: put
   createUser:
     handler: src/addUser.addUser
     events:
       - httpApi:
           path: /createUser
           method: post
+
   getUser:
     handler: src/getUser.getUser
     events:
       - httpApi:
           path: /getUser/{id}
           method: get
-  getUserByEmail:
-    handler: src/getUserByEmail.getUser
+
+  updateUser:
+    handler: src/updateUser.updateUser
     events:
       - httpApi:
-          path: /getUserByEmail/{email}
-          method: get
+          path: /updateUser
+          method: post
+
 resources:
   Resources:
     TaskTable:
@@ -48,15 +52,23 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: celular
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: phone # Añadir el atributo phone
             AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: CelularIndex
+          - IndexName: EmailIndex
             KeySchema:
-              - AttributeName: celular
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: PhoneIndex # Añadir el índice PhoneIndex
+            KeySchema:
+              - AttributeName: phone
                 KeyType: HASH
             Projection:
               ProjectionType: ALL

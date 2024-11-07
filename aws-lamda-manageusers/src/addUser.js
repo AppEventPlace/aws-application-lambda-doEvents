@@ -96,25 +96,24 @@ exports.addUser = async (event) => {
     }
 
     const createDate = new Date();
+    /*
+        // Subir la foto de perfil a S3
+        const bucketName = "doeventprofileimagesbucket";
+        const fotoPerfilKey = "fotosPerfil/" + user + ".jpg";
+        const fotoPerfilBuffer = Buffer.from(fotoPerfilBase64, "base64");
 
-    // Subir la foto de perfil a S3
-    const bucketName = "doeventprofileimagesbucket";
-    const fotoPerfilKey = "fotosPerfil/" + user + ".jpg";
-    const fotoPerfilBuffer = Buffer.from(fotoPerfilBase64, "base64");
+        const s3Params = {
+            Bucket: bucketName,
+            Key: fotoPerfilKey,
+            Body: fotoPerfilBuffer,
+            ContentEncoding: 'base64',
+            ContentType: 'image/jpeg'
+        };
 
-    const s3Params = {
-      Bucket: bucketName,
-      Key: fotoPerfilKey,
-      Body: fotoPerfilBuffer,
-      ContentEncoding: "base64",
-      ContentType: "image/jpeg",
-    };
+        await s3.putObject(s3Params).promise();
 
-    await s3.putObject(s3Params).promise();
-
-    // URL de la foto de perfil en S3
-    const fotoPerfilUrl =
-      "https://" + bucketName + ".s3.amazonaws.com/" + fotoPerfilKey;
+        // URL de la foto de perfil en S3
+        const fotoPerfilUrl = "https://" + bucketName + ".s3.amazonaws.com/" + fotoPerfilKey;*/
 
     const newTask = {
       rquid,
@@ -127,7 +126,7 @@ exports.addUser = async (event) => {
       user,
       password,
       createDate,
-      fotoPerfilUrl,
+      //fotoPerfilUrl,
       userStatus: "inactive", // Seteamos el status inicial como 'inactive'
     };
 
@@ -192,6 +191,7 @@ exports.addUser = async (event) => {
       body: JSON.stringify({
         success: false,
         message: errorMessage,
+        desc: errorDescription,
         data: [],
       }),
     };
