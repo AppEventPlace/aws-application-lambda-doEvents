@@ -181,7 +181,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/aws-lambda-managecategories/dev/1730756260548-2024-11-04T21:37:40.548Z/aws-lambda-managecategories.zip"
+          "S3Key": "serverless/aws-lambda-managecategories/dev/1730928322114-2024-11-06T21:25:22.114Z/aws-lambda-managecategories.zip"
         },
         "Handler": "src/getCategory.getCategoryById",
         "Runtime": "nodejs20.x",
@@ -206,7 +206,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/aws-lambda-managecategories/dev/1730756260548-2024-11-04T21:37:40.548Z/aws-lambda-managecategories.zip"
+          "S3Key": "serverless/aws-lambda-managecategories/dev/1730928322114-2024-11-06T21:25:22.114Z/aws-lambda-managecategories.zip"
         },
         "Handler": "src/createCategory.createCategory",
         "Runtime": "nodejs20.x",
@@ -231,7 +231,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/aws-lambda-managecategories/dev/1730756260548-2024-11-04T21:37:40.548Z/aws-lambda-managecategories.zip"
+          "S3Key": "serverless/aws-lambda-managecategories/dev/1730928322114-2024-11-06T21:25:22.114Z/aws-lambda-managecategories.zip"
         },
         "Handler": "src/updateCategory.updateCategory",
         "Runtime": "nodejs20.x",
@@ -249,34 +249,34 @@
         "GetUserLogGroup"
       ]
     },
-    "GetCategoryByIdLambdaVersion2iHyT7O2UwsFiEUOxnFL75ABMGuV9Tn5MRmfhurbgs": {
+    "GetCategoryByIdLambdaVersionAQHIlKYeDMCHo7p43h72ad5IjOJ9d54n0j2FnFb1VA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetCategoryByIdLambdaFunction"
         },
-        "CodeSha256": "r/nHqIgxP+RZGozrt2K0wtYEiBX7vVbv7djGsl2IaMc="
+        "CodeSha256": "hJ07n4fSeMFwubcf8X96M6HRv14coZVrBwiKz6jl40o="
       }
     },
-    "CreateUserLambdaVersionSHjVB8MdYffHbUgeI2qrzELuQqLIeWi6Pg09xXLnvEs": {
+    "CreateUserLambdaVersionVouPHUgZwlfyrM9vENobV4im74LNBvfcmj6rNpeWE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CreateUserLambdaFunction"
         },
-        "CodeSha256": "r/nHqIgxP+RZGozrt2K0wtYEiBX7vVbv7djGsl2IaMc="
+        "CodeSha256": "hJ07n4fSeMFwubcf8X96M6HRv14coZVrBwiKz6jl40o="
       }
     },
-    "GetUserLambdaVersionsj6NETSh2Kyz6eFjF2HQkw6W9Daoravjao6YrrhXD8": {
+    "GetUserLambdaVersionjvLa5Ski22Loqbbhr0wMpIQUxQddqfm7KiddisvyR6s": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetUserLambdaFunction"
         },
-        "CodeSha256": "r/nHqIgxP+RZGozrt2K0wtYEiBX7vVbv7djGsl2IaMc="
+        "CodeSha256": "hJ07n4fSeMFwubcf8X96M6HRv14coZVrBwiKz6jl40o="
       }
     },
     "HttpApi": {
@@ -532,7 +532,6 @@
         "AttributeDefinitions": [
           {
             "AttributeName": "id",
-            "Required": "No",
             "AttributeType": "S"
           }
         ],
@@ -557,7 +556,7 @@
     "GetCategoryByIdLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetCategoryByIdLambdaVersion2iHyT7O2UwsFiEUOxnFL75ABMGuV9Tn5MRmfhurbgs"
+        "Ref": "GetCategoryByIdLambdaVersionAQHIlKYeDMCHo7p43h72ad5IjOJ9d54n0j2FnFb1VA"
       },
       "Export": {
         "Name": "sls-aws-lambda-managecategories-dev-GetCategoryByIdLambdaFunctionQualifiedArn"
@@ -566,7 +565,7 @@
     "CreateUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CreateUserLambdaVersionSHjVB8MdYffHbUgeI2qrzELuQqLIeWi6Pg09xXLnvEs"
+        "Ref": "CreateUserLambdaVersionVouPHUgZwlfyrM9vENobV4im74LNBvfcmj6rNpeWE"
       },
       "Export": {
         "Name": "sls-aws-lambda-managecategories-dev-CreateUserLambdaFunctionQualifiedArn"
@@ -575,7 +574,7 @@
     "GetUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetUserLambdaVersionsj6NETSh2Kyz6eFjF2HQkw6W9Daoravjao6YrrhXD8"
+        "Ref": "GetUserLambdaVersionjvLa5Ski22Loqbbhr0wMpIQUxQddqfm7KiddisvyR6s"
       },
       "Export": {
         "Name": "sls-aws-lambda-managecategories-dev-GetUserLambdaFunctionQualifiedArn"

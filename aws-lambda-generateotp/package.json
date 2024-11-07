@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.1677.0",
+    "crypto": "^1.0.1"
+  }
+}

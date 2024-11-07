@@ -10,9 +10,9 @@ exports.getCategoryById = async (event) => {
     const params = {
       TableName: "EventosCategorias",
     };
-    const data = await dynamoDb.get(params).promise();
+    const data = await dynamoDb.scan(params).promise();
 
-    if (data.Item) {
+    if (data.Items) {
       return {
         statusCode: 200,
         body: JSON.stringify({

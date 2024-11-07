@@ -1,7 +1,7 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: studentassasa
+org: events
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: aws-lambda-createuser
+service: aws-lambda-manageusers
 
 provider:
   name: aws
@@ -12,14 +12,14 @@ provider:
       Action:
         - dynamodb:*
       Resource:
-        - arn:aws:dynamodb:us-east-1:519010577666:table/Cliente
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client
 functions:
   hello:
-    handler: src/handler.hello
+    handler: src/updateUser.updateUser
     events:
       - httpApi:
-          path: /
-          method: get
+          path: /updateUser
+          method: put
   createUser:
     handler: src/addUser.addUser
     events:
@@ -32,12 +32,18 @@ functions:
       - httpApi:
           path: /getUser/{id}
           method: get
+  getUserByEmail:
+    handler: src/getUserByEmail.getUser
+    events:
+      - httpApi:
+          path: /getUserByEmail/{email}
+          method: get
 resources:
   Resources:
     TaskTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Cliente
+        TableName: Client
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id
