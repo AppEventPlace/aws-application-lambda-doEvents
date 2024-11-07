@@ -1,7 +1,7 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: studentassasa
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: aws-lambda-createuser
+service: aws-lambda-manageusers
 
 provider:
   name: aws
@@ -11,46 +11,64 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:*
+        - s3:PutObject
+        - lambda:InvokeFunction # Permiso para invocar otra Lambda
       Resource:
-        - arn:aws:dynamodb:us-east-1:519010577666:table/Cliente
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client/index/EmailIndex
+        - arn:aws:dynamodb:us-east-1:519010577666:table/Client/index/PhoneIndex  # Añadir el PhoneIndex
+        - arn:aws:s3:::doeventprofileimagesbucket
+        - arn:aws:lambda:us-east-1:519010577666:function:aws-lambda-auditeventlog-dev-registerLog # ARN de la Lambda registerLog
+
 functions:
-  hello:
-    handler: src/handler.hello
-    events:
-      - httpApi:
-          path: /
-          method: get
   createUser:
     handler: src/addUser.addUser
     events:
       - httpApi:
           path: /createUser
           method: post
+
   getUser:
     handler: src/getUser.getUser
     events:
       - httpApi:
           path: /getUser/{id}
           method: get
+
+  updateUser:
+    handler: src/updateUser.updateUser
+    events:
+      - httpApi:
+          path: /updateUser
+          method: post
+
 resources:
   Resources:
     TaskTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Cliente
+        TableName: Client
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: celular
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: phone    # Añadir el atributo phone
             AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: CelularIndex
+          - IndexName: EmailIndex
             KeySchema:
-              - AttributeName: celular
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: PhoneIndex   # Añadir el índice PhoneIndex
+            KeySchema:
+              - AttributeName: phone
                 KeyType: HASH
             Projection:
               ProjectionType: ALL

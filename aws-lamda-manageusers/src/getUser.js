@@ -14,7 +14,7 @@ exports.getUser = async (event) => {
 
         // Configurar los parámetros para la consulta
         const params = {
-            TableName: "Cliente",
+            TableName: "Client",
             Key: {
                 id: id
             }
