@@ -3,7 +3,7 @@
     "aws-sdk": "^2.1645.0",
     "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
-    "s3": "^4.4.0",
+    "s3": "^2.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
