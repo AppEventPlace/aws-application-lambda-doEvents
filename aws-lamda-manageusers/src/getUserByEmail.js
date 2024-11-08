@@ -15,15 +15,17 @@ exports.getUser = async (event) => {
     // Configurar los parámetros para la consulta
     const params = {
       TableName: "Client",
-      Key: {
-        email: email,
+      IndexName: "EmailIndex",
+      KeyConditionExpression: "email = :email",
+      ExpressionAttributeValues: {
+        ":email": email,
       },
     };
 
     // Ejecutar la consulta
-    const result = await dynamodb.get(params).promise();
+    const result = await dynamodb.query(params).promise();
 
-    if (!result.Item) {
+    if (!result.Items) {
       throw new Error("Usuario no encontrado");
     }
 
@@ -34,7 +36,7 @@ exports.getUser = async (event) => {
         "Content-Type": "application/json",
         // rquid: id,
       },
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(result.Items),
     };
   } catch (error) {
     console.error("Error al consultar el usuario:", error);
@@ -58,6 +60,7 @@ exports.getUser = async (event) => {
       },
       body: JSON.stringify({
         statusDesc: errorMessage,
+        message: error.message,
         statusCode,
       }),
     };

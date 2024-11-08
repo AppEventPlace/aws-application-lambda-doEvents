@@ -41,7 +41,12 @@ functions:
       - httpApi:
           path: /updateUser
           method: post
-
+  getUserByEmail:
+    handler: src/getUserByEmail.getUser
+    events:
+      - httpApi:
+          path: /getUserByEmail/{email}
+          method: get
 resources:
   Resources:
     TaskTable:
